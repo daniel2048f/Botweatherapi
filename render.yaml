@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: clima-bot
-    runtime: python
-    plan: free
-    buildCommand: ""
-    startCommand: python apiclima.py
