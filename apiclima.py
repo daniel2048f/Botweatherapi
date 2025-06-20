@@ -75,7 +75,10 @@ async def iniciar_bot():
     global app_telegram
     app_telegram = ApplicationBuilder().token(BOT_TOKEN).build()
 
-    # Handler de mensajes
+    # ✅ Agrega esta línea crucial:
+    await app_telegram.initialize()
+
+    # Handlers
     app_telegram.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responder_clima))
 
     # Scheduler
@@ -83,7 +86,7 @@ async def iniciar_bot():
     scheduler = AsyncIOScheduler(timezone=colombia_tz)
     scheduler.add_job(enviar_reporte_programado, 'cron', hour=6, minute=0, args=[app_telegram.bot])
     scheduler.add_job(enviar_reporte_programado, 'cron', hour=12, minute=0, args=[app_telegram.bot])
-    scheduler.add_job(enviar_reporte_programado, 'cron', hour=19, minute=0, args=[app_telegram.bot])
+    scheduler.add_job(enviar_reporte_programado, 'cron', hour=23, minute=25, args=[app_telegram.bot])
     scheduler.start()
 
     # Enviar reporte al arrancar
