@@ -55,6 +55,15 @@ async def enviar_reporte_programado(bot: Bot):
     await bot.send_message(chat_id=CHAT_ID, text=mensaje, parse_mode="Markdown")
     print(f"[{datetime.now()}] ✅ Enviado automáticamente")
 
+# --- Función TEST: mensaje de prueba cada 2 minutos ---
+async def test_envio(bot: Bot):
+    try:
+        mensaje = f"[TEST] 🧪 Reporte automático de prueba\nHora: {datetime.now().strftime('%H:%M:%S')}"
+        await bot.send_message(chat_id=CHAT_ID, text=mensaje)
+        print(f"[{datetime.now()}] 🧪 Test automático enviado correctamente.")
+    except Exception as e:
+        print(f"[{datetime.now()}] ❌ Error en test de envío: {e}")
+
 # --- Respuesta a mensajes ---
 async def responder_clima(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if "clima" in update.message.text.lower():
@@ -75,24 +84,31 @@ async def iniciar_bot():
     global app_telegram
     app_telegram = ApplicationBuilder().token(BOT_TOKEN).build()
 
-    # ✅ Agrega esta línea crucial:
-    await app_telegram.initialize()
+    await app_telegram.initialize()  # Importante para Webhook
 
-    # Handlers
     app_telegram.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responder_clima))
 
     # Scheduler
     colombia_tz = pytz.timezone("America/Bogota")
     scheduler = AsyncIOScheduler(timezone=colombia_tz)
+
+    # Envíos normales
     scheduler.add_job(enviar_reporte_programado, 'cron', hour=6, minute=0, args=[app_telegram.bot])
     scheduler.add_job(enviar_reporte_programado, 'cron', hour=12, minute=0, args=[app_telegram.bot])
-    scheduler.add_job(enviar_reporte_programado, 'cron', hour=23, minute=42, args=[app_telegram.bot])
+    scheduler.add_job(enviar_reporte_programado, 'cron', hour=23, minute=48, args=[app_telegram.bot])
+
+    # TEST: mensaje en consola cada 2 minutos
+    scheduler.add_job(lambda: print(f"[{datetime.now()}] 🧪 Scheduler activo (prueba cada 2 min)"), 'interval', minutes=2)
+
+    # TEST: mensaje real cada 2 minutos
+    scheduler.add_job(test_envio, 'interval', minutes=2, args=[app_telegram.bot])
+
     scheduler.start()
 
-    # Enviar reporte al arrancar
+    # Enviar uno al arrancar
     await enviar_reporte_programado(app_telegram.bot)
 
-    # Configurar webhook
+    # Webhook
     await app_telegram.bot.set_webhook(WEBHOOK_URL)
     print(f"✅ Webhook activo en {WEBHOOK_URL}")
     print("🤖 Bot activo con programación y respuesta manual...")
