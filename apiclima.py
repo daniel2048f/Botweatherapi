@@ -63,7 +63,7 @@ async def main():
     scheduler = AsyncIOScheduler(timezone=colombia_tz)
     scheduler.add_job(enviar_reporte_programado, 'cron', hour=6, minute=0, args=[app.bot])
     scheduler.add_job(enviar_reporte_programado, 'cron', hour=12, minute=0, args=[app.bot])
-    scheduler.add_job(enviar_reporte_programado, 'cron', hour=20, minute=32, args=[app.bot])
+    scheduler.add_job(enviar_reporte_programado, 'cron', hour=19, minute=0, args=[app.bot])
 
     scheduler.start()
 

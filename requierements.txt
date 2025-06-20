@@ -1,5 +1,0 @@
-python-telegram-bot>=20.0
-apscheduler==3.10.1
-pytz
-requests
-nest_asyncio
