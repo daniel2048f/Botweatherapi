@@ -86,7 +86,7 @@ async def iniciar_bot():
     scheduler = AsyncIOScheduler(timezone=colombia_tz)
     scheduler.add_job(enviar_reporte_programado, 'cron', hour=6, minute=0, args=[app_telegram.bot])
     scheduler.add_job(enviar_reporte_programado, 'cron', hour=12, minute=0, args=[app_telegram.bot])
-    scheduler.add_job(enviar_reporte_programado, 'cron', hour=23, minute=31, args=[app_telegram.bot])
+    scheduler.add_job(enviar_reporte_programado, 'cron', hour=23, minute=42, args=[app_telegram.bot])
     scheduler.start()
 
     # Enviar reporte al arrancar
