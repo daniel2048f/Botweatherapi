@@ -80,4 +80,4 @@ El proyecto está listo para desplegarse en [Render](https://render.com):
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` si deseas más detalles.
+Este proyecto está bajo la Licencia MIT.
